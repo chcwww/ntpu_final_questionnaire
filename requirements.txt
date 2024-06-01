@@ -1,0 +1,6 @@
+# pip install -r requirements.txt 
+selenium==4.8.2
+tqdm
+numpy
+maskpass
+pyinstaller

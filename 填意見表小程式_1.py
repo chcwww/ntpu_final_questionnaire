@@ -88,62 +88,61 @@ try :
     counter = 0
     for m, obj in enumerate(href) :
         counter += 1
-        if(1) :
-            driver.get(obj)
-            print(f"開始填寫 '{class_name[m]}' ...")
+        driver.get(obj)
+        print(f"開始填寫 '{class_name[m]}' ...")
 
-            total = 0
-            with tqdm(total = 100, colour = "#0396ff") as pbar:
-                pbar.set_description('填寫進度')
-                driver.find_element("name", "q03").click()  
+        total = 0
+        with tqdm(total = 100, colour = "#0396ff") as pbar:
+            pbar.set_description('填寫進度')
+            driver.find_element("name", "q03").click()  
 
-                for i in range(1, 25) :   
-                    if(not(i in skip)) :
-                        if(i in trap) :
-                            k = 4
-                        else :
-                            k = np.random.choice([0, 1], p = p.ravel())
-                        elements = driver.find_elements("name", "q"+str(i))
-                        elements[k].click()
-                        pbar.update(4)
-                        total += 4
-                
-                for t, i in enumerate(need) :   
-                    elements = driver.find_elements("name", "qc"+str(i))
-                    if(t == 0) :
-                        elements[0].click()
-                        elements[3].click()
-                        elements[4].click()
+            for i in range(1, 25) :   
+                if(not(i in skip)) :
+                    if(i in trap) :
+                        k = 4
                     else :
-                        elements[t].click()
+                        k = np.random.choice([0, 1], p = p.ravel())
+                    elements = driver.find_elements("name", "q"+str(i))
+                    elements[k].click()
                     pbar.update(4)
                     total += 4
+            
+            for t, i in enumerate(need) :   
+                elements = driver.find_elements("name", "qc"+str(i))
+                if(t == 0) :
+                    elements[0].click()
+                    elements[3].click()
+                    elements[4].click()
+                else :
+                    elements[t].click()
+                pbar.update(4)
+                total += 4
 
-                pbar.update(100-total)
-                driver.find_element("name", "q61").send_keys("謝謝老師!")
-                
-                for i in range(70, 73) :   
-                    try :
-                        elements = driver.find_elements("name", "qc"+str(i))
-                        if(i==0) :
-                            k = 2
-                        else :
-                            k = 0
-                        elements[k].click()
-                    except :
-                        break
-            driver.find_element(By.XPATH, "//input[@type='submit']").click()
-            while(1) :
-                pbar.update(3)
-                if alert_is_present(driver) :
+            pbar.update(100-total)
+            driver.find_element("name", "q61").send_keys("謝謝老師!")
+            
+            for i in range(70, 73) :   
+                try :
+                    elements = driver.find_elements("name", "qc"+str(i))
+                    if(i==0) :
+                        k = 2
+                    else :
+                        k = 0
+                    elements[k].click()
+                except :
+                    break
+        driver.find_element(By.XPATH, "//input[@type='submit']").click()
+        while(1) :
+            pbar.update(3)
+            if alert_is_present(driver) :
+                driver.switch_to.alert.accept()
+                try :
                     driver.switch_to.alert.accept()
-                    try :
-                        driver.switch_to.alert.accept()
-                        break
-                    except :
-                        break
-            print(f"已完成 '{class_name[m]}' 的填寫")
-            time.sleep(0.5)
+                    break
+                except :
+                    break
+        print(f"已完成 '{class_name[m]}' 的填寫")
+        time.sleep(0.5)
     out_str = "填完啦!" if counter>0 else \
         "! 你帳號密碼打錯了嗎，我沒做防呆，打錯的話就再重開一次吧\n也可能是你之前填完了"
     print(out_str)
